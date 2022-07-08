@@ -22,6 +22,6 @@ def bag_of_words(tokenized_sentence, all_words):
 # print(a)
 
 #### Stemming with lower casing ####
-words = ["organize", "Organizes", "organizing"]
-stemmed_words = [stem(w) for w in words]
-print(stemmed_words)
+# words = ["organize", "Organizes", "organizing"]
+# stemmed_words = [stem(w) for w in words]
+# print(stemmed_words)
