@@ -36,7 +36,7 @@ for (pattern_sentence, tag) in xy:
     bag = bag_of_words(pattern_sentence, all_words)
     X_train.append(bag)
 
-    label = tags.index(tags)
+    label = tags.index(tag)
     y_train.append(label) # Cross entropy loss
 
 X_train = np.array(X_train)
@@ -50,8 +50,8 @@ class ChatDataset(Dataset):
         self.y_data = y_train
 
     # dataset[idx]
-    def __getitem__(self, idx):
-        return self.x_data[idx], self.y_data[idx]
+    def __getitem__(self, index):
+        return self.x_data[index], self.y_data[index]
 
     def __len__(self):
         return self.n_samples
