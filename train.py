@@ -25,7 +25,7 @@ for intent in intents['intents']:
         all_words.extend(w)
         xy.append((w, tag))
 
-ignore_words = ['?', '!', '.', ',']
+ignore_words = ['?', '!', '.']
 all_words = [stem(w) for w in all_words if w not in ignore_words]
 # print(all_words)
 all_words = sorted(set(all_words))
@@ -69,8 +69,8 @@ num_epochs = 1000
 dataset = ChatDataset()
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True, num_workers =0)
 
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = NeuralNet(input_size, hidden_size, output_size)
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = NeuralNet(input_size, hidden_size, output_size).to(device)
 
 
 #loss and optimizer
@@ -79,8 +79,8 @@ optimizer = torch.optim.Adam(model.parameters(), lr= learning_rate)
 
 for epoch in range(num_epochs):
     for (words, labels) in train_loader:
-        words = words.to(torch.device('cpu'))
-        labels = labels.to(torch.device('cpu'), dtype=torch.int64)
+        words = words.to(device)
+        labels = labels.to(dtype=torch.int64).to(device)
 
         # Forward pass
         outputs= model(words)
@@ -95,3 +95,17 @@ for epoch in range(num_epochs):
         print(f'Epoch: {epoch+1}/{num_epochs}, Loss: {loss.item():.4f}')
 
 print(f'final loss, loss = {loss.item():.4f}')
+
+data = {
+    "model_state": model.state_dict(),
+    "input_size": input_size,
+    "output_size": output_size,
+    "hidden_size": hidden_size,
+    "all_words" : all_words,
+    "tags": tags
+}
+
+FILE = "data.pth"
+torch.save(data, FILE)
+
+print(f'training complete and model saved to {FILE}')
